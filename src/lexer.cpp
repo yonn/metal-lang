@@ -14,13 +14,13 @@ namespace mtl {
 	static bool is_number(const std::string& token);
 
 	const static std::set<std::string> symbols = { "[", "]",
-	                                                           "{", "}",
-								   "(", ")",
-								   "::", ":", ";" 
-								   "." };
+	                                               "{", "}",
+	                                               "(", ")",
+	                                               "::", ":", ";" 
+	                                               "." };
 
 	const static std::set<std::string> keywords = { "int",
-		                                                    "string" };
+		                                        "string" };
 
 	std::vector<std::string> tokenize(const std::string& line, size_t line_num)
 	{
