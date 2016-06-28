@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <set>
 
 namespace mtl {
 
@@ -26,7 +27,8 @@ namespace mtl {
 	
 	using TokenList = std::vector<TokenIR>;
 	
-	TokenList tokenize(std::string line);
+	std::vector<std::string> tokenize(const std::string& line, size_t line_num);
+
 }
 
 #endif /*METAL_LEXER_HPP*/
