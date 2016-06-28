@@ -10,8 +10,10 @@ namespace mtl {
 	static bool is_hex_digit(char c);
 
 
-	static bool is_identifier(const std::string& token);
-	static bool is_number(const std::string& token);
+	static bool is_identifier_token(const std::string& token);
+	static bool is_number_token(const std::string& token);
+	static bool is_string_token(const std::string& token);
+	static bool is_char_token(const std::string& token);
 
 	const static std::set<std::string> symbols = { "[", "]",
 	                                               "{", "}",
@@ -43,11 +45,13 @@ namespace mtl {
 
 	bool is_token(const std::string& token)
 	{
-		if (is_whitespace(token[token.size() - 1])) return false;
+		if (is_string_token(token)) return true;
+		else if (is_char_token(token)) return true;
+		else if (is_whitespace(token[token.size() - 1])) return false;
 		else if (symbols.count(token) == 1) return true;
 		else if (keywords.count(token) == 1) return true;
-		else if (is_number(token)) return true;
-		else return is_identifier(token);
+		else if (is_number_token(token)) return true;
+		else return is_identifier_token(token);
 	}
 
 	bool is_whitespace(char c)
@@ -72,7 +76,7 @@ namespace mtl {
 		return (c >= 'a' and c <= 'f') or (c >= 'A' and c <= 'f') or is_number(c);
 	}
 
-	bool is_identifier(const std::string& token)
+	bool is_identifier_token(const std::string& token)
 	{
 		if (not is_letter(token[0]) and not (token[0] == '_')) return false;
 		for (size_t i = 1; i < token.size(); i++) {
@@ -83,7 +87,7 @@ namespace mtl {
 		return true;
 	}
 
-	bool is_number(const std::string& token)
+	bool is_number_token(const std::string& token)
 	{
 		bool period = false;
 		bool hex = false;
@@ -108,4 +112,27 @@ namespace mtl {
 		return true;
 	}
 
+	bool is_string_token(const std::string& token)
+	{
+		if (token[0] == '"') {
+			if (token.size() > 2 and token[token.size() - 2] == '"') {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool is_char_token(const std::string& token)
+	{
+		if (token[0] == '\'') {
+			if (token.size() > 2 and token[token.size() - 2] == '\'') {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
 }
