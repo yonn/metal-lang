@@ -2,24 +2,24 @@
 
 namespace mtl {
 
-	/*private*/ bool is_token(const std::string& token);
+	static bool is_token(const std::string& token);
 
-	/*private*/ bool is_whitespace(char c);
-	/*private*/ bool is_letter(char c);
-	/*private*/ bool is_number(char c);
-	/*private*/ bool is_hex_digit(char c);
+	static bool is_whitespace(char c);
+	static bool is_letter(char c);
+	static bool is_number(char c);
+	static bool is_hex_digit(char c);
 
 
-	/*private*/ bool is_identifier(const std::string& token);
-	/*private*/ bool is_number(const std::string& token);
+	static bool is_identifier(const std::string& token);
+	static bool is_number(const std::string& token);
 
-	/*private*/ const static std::set<std::string> symbols = { "[", "]",
+	const static std::set<std::string> symbols = { "[", "]",
 	                                                           "{", "}",
 								   "(", ")",
 								   "::", ":", ";" 
 								   "." };
 
-	/*private*/ const static std::set<std::string> keywords = { "int",
+	const static std::set<std::string> keywords = { "int",
 		                                                    "string" };
 
 	std::vector<std::string> tokenize(const std::string& line, size_t line_num)
