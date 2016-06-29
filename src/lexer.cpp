@@ -36,7 +36,9 @@ namespace mtl {
 						       "++", "--" };
 
 	const static std::set<std::string> keywords = { "int",
-		                                        "string" };
+		                                        "string",
+							"if",
+							"else" };
 	
 	const std::string TokenIR::str() const
 	{
@@ -152,7 +154,7 @@ namespace mtl {
 
 	bool is_letter(char c)
 	{
-		return c >= 'A' and c <= 'z';
+		return (c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z');
 	}
 
 	bool is_number(char c)
