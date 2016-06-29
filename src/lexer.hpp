@@ -8,6 +8,8 @@
 #include <set>
 #include <algorithm>
 
+#include "error.hpp"
+
 namespace mtl {
 
 	class TokenIR {

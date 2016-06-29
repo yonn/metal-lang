@@ -2,8 +2,6 @@
 
 namespace mtl {
 
-	std::map<size_t, std::string> lines;
-
 	TokenList tokenize_file(const std::string& filename)
 	{
 		TokenList tokens;
@@ -13,6 +11,9 @@ namespace mtl {
 
 		std::ifstream in(filename);
 		if (in) {
+
+			error_filename = filename;
+
 			while (std::getline(in, line)) {
 				if (line.find("/*") != std::string::npos) {
 					comment = true;
@@ -37,7 +38,7 @@ namespace mtl {
 				flag = true;
 			}
 		} else {
-			//error
+			error("Could not open file: %s", filename.c_str());
 		}
 		
 		for (const auto& l: lines) {

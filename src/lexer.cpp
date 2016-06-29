@@ -124,14 +124,11 @@ namespace mtl {
 			auto fn = std::count(token.begin(), token.end(), '.');
 			if (hex1 != 0 or hex2 != 0) {
 				if (fn != 0) {
-					// error
+					error(line_num, "Hexadecimal number \"%s\" must be a whole number.", token.c_str());
 				} else {
 					res.tid = TokenIR::Type::HexNum;
 				}
 			} else if (fn != 0) {
-				if (fn > 1) {
-					//error
-				}
 				res.tid = TokenIR::Type::FloatNum;
 			} else {
 				res.tid = TokenIR::Type::DecimalNum;
@@ -139,7 +136,7 @@ namespace mtl {
 		} else if (is_identifier_token(token)){
 			res.tid = TokenIR::Type::Identifier;
 		} else {
-			// error
+			error(line_num, "Unidentified token \"%s\"", token.c_str());
 		}
 
 		return res;
