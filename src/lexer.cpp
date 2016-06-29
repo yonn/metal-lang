@@ -2,6 +2,8 @@
 
 namespace mtl {
 
+	static bool comment = false;
+
 	static bool is_token(const std::string& token);
 
 	static bool is_whitespace(char c);
@@ -14,12 +16,14 @@ namespace mtl {
 	static bool is_number_token(const std::string& token);
 	static bool is_string_token(const std::string& token);
 	static bool is_char_token(const std::string& token);
+	static bool is_comment_token(const std::string& token);
 
 	const static std::set<std::string> symbols = { "[", "]",
 	                                               "{", "}",
 	                                               "(", ")",
 	                                               "::", ":", ";" 
-	                                               "." };
+	                                               ".",
+						       "=" };
 
 	const static std::set<std::string> keywords = { "int",
 		                                        "string" };
@@ -28,9 +32,18 @@ namespace mtl {
 	{
 		std::vector<std::string> tokens;
 		std::string buf = "";
-		for (const auto c: line) {
+		for (size_t i = 0; i < line.size(); i++) {
+			const char c = line[i];
+
 			if (not is_token(buf + c)) {
-				tokens.push_back(buf);
+				if (comment) {
+					comment = false;
+					buf = "";
+					continue;
+				}
+				if (buf != "") {
+					tokens.push_back(buf);
+				}
 				buf = "";
 				if (not is_whitespace(c)) {
 					buf += c;
@@ -39,13 +52,16 @@ namespace mtl {
 				buf += c;
 			}
 		}
-		tokens.push_back(buf);
+		if (buf != "") {
+			tokens.push_back(buf);
+		}
 		return tokens;
 	}
 
 	bool is_token(const std::string& token)
 	{
-		if (is_string_token(token)) return true;
+		if (is_comment_token(token)) return true; 
+		else if (is_string_token(token)) return true;
 		else if (is_char_token(token)) return true;
 		else if (is_whitespace(token[token.size() - 1])) return false;
 		else if (symbols.count(token) == 1) return true;
@@ -116,10 +132,12 @@ namespace mtl {
 	{
 		if (token[0] == '"') {
 			if (token.size() > 2 and token[token.size() - 2] == '"') {
+				if (token.size() > 3 and token[token.size() - 3] == '\\') {
+					return true;
+				}
 				return false;
-			} else {
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}
@@ -135,4 +153,18 @@ namespace mtl {
 		}
 		return false;
 	}
+
+	bool is_comment_token(const std::string& token)
+	{
+		if (token[0] != '/') return false;
+		comment = true;
+		if (token[1] == '/') {
+			return not (token[token.size() - 1] == '\n');
+		} else if (token[1] == '*') {
+			return not (token[token.size() - 1] == '/' and token[token.size() - 2] == '*');
+		}
+
+		return true;
+	}
+
 }
