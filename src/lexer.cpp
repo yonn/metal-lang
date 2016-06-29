@@ -6,6 +6,8 @@ namespace mtl {
 
 	static bool is_token(const std::string& token);
 
+	static TokenIR classify(const std::string& token, size_t line_num);
+
 	static bool is_whitespace(char c);
 	static bool is_letter(char c);
 	static bool is_number(char c);
@@ -35,8 +37,23 @@ namespace mtl {
 
 	const static std::set<std::string> keywords = { "int",
 		                                        "string" };
+	
+	const std::string TokenIR::str() const
+	{
+		const static std::array<std::string, 8> Type_str = { "Keyword",
+		                                                     "Symbol",
+							             "String",
+							             "Character",
+							             "DecNum",
+							             "FloatNum",
+							             "HexNum",
+							             "Identifier" };
+		std::ostringstream s;
+		s << Type_str[(size_t)this->tid] << "[ " << this->token << " ]";
+		return s.str();
+	}
 
-	std::vector<std::string> tokenize(const std::string& line, size_t line_num)
+	TokenList tokenize(const std::string& line, size_t line_num)
 	{
 		std::vector<std::string> tokens;
 		std::string buf = "";
@@ -63,7 +80,14 @@ namespace mtl {
 		if (buf != "") {
 			tokens.push_back(buf);
 		}
-		return tokens;
+		
+		TokenList res;
+
+		for (const auto& t: tokens) {
+			res.push_back(classify(t, line_num));
+		}
+
+		return res;
 	}
 
 	bool is_token(const std::string& token)
@@ -76,6 +100,47 @@ namespace mtl {
 		else if (keywords.count(token) == 1) return true;
 		else if (is_number_token(token)) return true;
 		else return is_identifier_token(token);
+	}
+
+	TokenIR classify(const std::string& token, size_t line_num)
+	{
+		TokenIR res;
+		res.line_number = line_num;
+		res.token = token;
+
+		if (keywords.count(token) == 1) {
+			res.tid = TokenIR::Type::Keyword;
+		} else if (symbols.count(token) == 1) {
+			res.tid = TokenIR::Type::Symbol;
+		} else if (token[0] == '"' and token[token.size() - 1] == '"') {
+			res.tid = TokenIR::Type::String;
+		} else if (token[0] == '\'' and token[token.size() - 1] == '\'') {
+			res.tid = TokenIR::Type::Character;
+		} else if (is_number_token(token)) {
+			auto hex1 = std::count(token.begin(), token.end(), 'x');
+			auto hex2 = std::count(token.begin(), token.end(), 'X');
+			auto fn = std::count(token.begin(), token.end(), '.');
+			if (hex1 != 0 or hex2 != 0) {
+				if (fn != 0) {
+					// error
+				} else {
+					res.tid = TokenIR::Type::HexNum;
+				}
+			} else if (fn != 0) {
+				if (fn > 1) {
+					//error
+				}
+				res.tid = TokenIR::Type::FloatNum;
+			} else {
+				res.tid = TokenIR::Type::DecimalNum;
+			}
+		} else if (is_identifier_token(token)){
+			res.tid = TokenIR::Type::Identifier;
+		} else {
+			// error
+		}
+
+		return res;
 	}
 
 	bool is_whitespace(char c)
