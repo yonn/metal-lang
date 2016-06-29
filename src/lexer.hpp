@@ -2,7 +2,9 @@
 #define METAL_LEXER_HPP
 
 #include <vector>
+#include <array>
 #include <string>
+#include <sstream>
 #include <set>
 #include <algorithm>
 
@@ -11,13 +13,16 @@ namespace mtl {
 	class TokenIR {
 	public:
 		
-		enum class Identifier{
+		enum class Type {
 			Keyword,
 			Symbol,
 			String,
-			Number,
+			Character,
+			DecimalNum,
+			FloatNum,
+			HexNum,
 			Identifier
-		} id;
+		} tid;
 
 		std::string token;
 
@@ -28,7 +33,7 @@ namespace mtl {
 	
 	using TokenList = std::vector<TokenIR>;
 	
-	std::vector<std::string> tokenize(const std::string& line, size_t line_num);
+	TokenList tokenize(const std::string& line, size_t line_num);
 
 }
 
