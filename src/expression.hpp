@@ -1,6 +1,9 @@
 #ifndef METAL_EXPRESSION_HPP
 #define METAL_EXPRESSION_HPP
 
+#include <string>
+#include <sstream>
+
 #include "error.hpp"
 
 namespace mtl {
@@ -13,6 +16,22 @@ namespace mtl {
 		virtual std::string cpp_codegen() const = 0;
 
 		size_t line_number;
+	};
+
+	class BinaryOpExpr : public Expression {
+	public:
+
+		BinaryOpExpr(std::string op, Expression* l, Expression* r);
+		
+		virtual std::string cpp_codegen() const;
+
+	protected:
+		
+		std::string op_;
+
+		Expression* rhs_;
+		Expression* lhs_;
+	
 	};
 
 }

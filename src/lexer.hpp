@@ -1,6 +1,7 @@
 #ifndef METAL_LEXER_HPP
 #define METAL_LEXER_HPP
 
+#include <list>
 #include <vector>
 #include <array>
 #include <string>
@@ -33,7 +34,7 @@ namespace mtl {
 		const std::string str() const;
 	};
 	
-	using TokenList = std::vector<TokenIR>;
+	using TokenList = std::list<TokenIR>;
 	
 	TokenList tokenize(const std::string& line, size_t line_num);
 
