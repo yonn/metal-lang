@@ -23,11 +23,11 @@ namespace mtl {
 		}
 		this->return_token(tok);
 
-		std::cout << "{" << std::endl;
+		/*std::cout << "{" << std::endl;
 		for (const auto& t: tokens) {
 			std::cout << "\t" << t.str() << std::endl;
 		}
-		std::cout << "}" << std::endl;
+		std::cout << "}" << std::endl;*/
 
 		return parse_expression_impl(tokens.begin(), tokens.end());
 	}
@@ -55,8 +55,10 @@ namespace mtl {
 		this->running_ = true;
 	}
 
-	const static std::array<std::string, 2> binary_operators = { "+",
-	                                                             "*" };
+	const static std::array<std::string, 4> binary_operators = { "+",
+	                                                             "-",
+	                                                             "*",
+								     "/" };
 
 	/*private*/ Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
@@ -74,6 +76,12 @@ namespace mtl {
 
 	Expression* Parser::parse_atom_impl(const expr_iter& begin, const expr_iter& end)
 	{
+		if (begin + 1 == end) {
+			auto tok = *begin;
+			if (tok.tid == TokenIR::Type::Identifier) {
+				return new VariableExpr(tok);
+			}
+		}
 		return nullptr;
 	}
 }

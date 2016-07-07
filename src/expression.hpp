@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 
+#include "lexer.hpp"
 #include "error.hpp"
 
 namespace mtl {
@@ -21,7 +22,7 @@ namespace mtl {
 	class BinaryOpExpr : public Expression {
 	public:
 
-		BinaryOpExpr(std::string op, Expression* l, Expression* r);
+		BinaryOpExpr(const std::string& op, Expression* l, Expression* r);
 		
 		virtual std::string cpp_codegen() const;
 
@@ -32,6 +33,18 @@ namespace mtl {
 		Expression* rhs_;
 		Expression* lhs_;
 	
+	};
+
+	class VariableExpr : public Expression {
+	public:
+		
+		VariableExpr(const TokenIR& token);
+
+		virtual std::string cpp_codegen() const;
+
+	protected:
+		
+		std::string varname_;
 	};
 
 }
