@@ -234,6 +234,9 @@ namespace mtl {
 			return not (token[token.size() - 1] == '\n');
 		} else if (token[1] == '*') {
 			return not (token[token.size() - 1] == '/' and token[token.size() - 2] == '*');
+		} else {
+			comment = false;
+			return false;
 		}
 
 		return true;
