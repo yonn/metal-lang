@@ -55,33 +55,18 @@ namespace mtl {
 		this->running_ = true;
 	}
 
-	const static std::array<std::string, 4> binary_operators = { "+",
-	                                                             "-",
-	                                                             "*",
-								     "/" };
+	/*
+	*	*Metal Expression Grammar*
+	*
+	*/
 
 	/*private*/ Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
-		for (const std::string& op: binary_operators) {
-			expr_iter p = std::find_if(begin, end, [=](const TokenIR& t) { return t.token == op; });
-			if (p != end) {
-				return new BinaryOpExpr(op,
-				                        parse_expression_impl(begin, p),
-				                        parse_expression_impl(p + 1, end));
-			}
-		}
-		
-		return parse_atom_impl(begin, end);
+
 	}
 
 	Expression* Parser::parse_atom_impl(const expr_iter& begin, const expr_iter& end)
 	{
-		if (begin + 1 == end) {
-			auto tok = *begin;
-			if (tok.tid == TokenIR::Type::Identifier) {
-				return new VariableExpr(tok);
-			}
-		}
-		return nullptr;
+
 	}
 }
