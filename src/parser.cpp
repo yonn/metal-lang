@@ -26,7 +26,7 @@ namespace mtl {
 		return parse_expression_impl(tokens.begin(), tokens.end());
 	}
 
-	/*private*/ TokenIR Parser::next()
+	TokenIR Parser::next()
 	{
 		if (this->tokens_.size() > 0) {
 			auto tmp = this->tokens_.front();
@@ -38,12 +38,12 @@ namespace mtl {
 		}
 	}
 
-	/*private*/ TokenIR Parser::peek()
+	TokenIR Parser::peek()
 	{
 		return this->tokens_.front();
 	}
 
-	/*private*/ void Parser::return_token(const TokenIR& t)
+	void Parser::return_token(const TokenIR& t)
 	{
 		this->tokens_.push_front(t);
 		this->running_ = true;
@@ -53,18 +53,16 @@ namespace mtl {
 
 	std::set<std::string> closing_symbols = { "}", ")", "]" };
 
-	typedef bool (*BinOpMatch)(const std::string&);
-
-	std::array<BinOpMatch,  2> binary_operator_matches = {
+	std::array<bool (*)(const std::string&),  2> binary_operator_matches = {
 	                                                       [](const auto& s) {
-							               return s == "+" or s == "-";
-							       },
-							       [](const auto &s) {
-							               return s == "*" or s == "/";
-							       }
+                                                                 return s == "+" or s == "-";
+                                                               },
+                                                               [](const auto &s) {
+                                                                 return s == "*" or s == "/";
+                                                               }
 		                                             };
 
-	/*private*/ Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
+	Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
 		size_t level = 0;
 		for (auto match: binary_operator_matches) {
