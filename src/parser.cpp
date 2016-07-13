@@ -23,12 +23,6 @@ namespace mtl {
 		}
 		this->return_token(tok);
 
-		/*std::cout << "{" << std::endl;
-		for (const auto& t: tokens) {
-			std::cout << "\t" << t.str() << std::endl;
-		}
-		std::cout << "}" << std::endl;*/
-
 		return parse_expression_impl(tokens.begin(), tokens.end());
 	}
 
@@ -59,15 +53,21 @@ namespace mtl {
 
 	std::set<std::string> closing_symbols = { "}", ")", "]" };
 
-	std::array<std::string,  4> binary_operators = { "+",
-	                                                 "-",
-		                                         "*",
-							 "/" };
+	typedef bool (*BinOpMatch)(const std::string&);
+
+	std::array<BinOpMatch,  2> binary_operator_matches = {
+	                                                       [](const auto& s) {
+							               return s == "+" or s == "-";
+							       },
+							       [](const auto &s) {
+							               return s == "*" or s == "/";
+							       }
+		                                             };
 
 	/*private*/ Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
 		size_t level = 0;
-		for (const auto& binop: binary_operators) {
+		for (auto match: binary_operator_matches) {
 			for (auto p = end - 1; p != begin - 1; --p) {
 				if (p->tid == TokenIR::Type::Symbol) {
 					if (closing_symbols.count(p->token) == 1) {
@@ -75,7 +75,7 @@ namespace mtl {
 					} else if (opening_symbols.count(p->token) == 1) {
 						level--;
 					} else if (level == 0) {
-						if (p->token == binop) {
+						if (match(p->token)) {
 							return new BinaryOpExpr(p->token,
 							                        parse_expression_impl(begin, p),
 										parse_expression_impl(p + 1, end));
