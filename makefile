@@ -1,7 +1,7 @@
 CC = g++
 
-CFLAGS = -Wall -std=c++14 -c
-LFLAGS = -Wall -std=c++14
+CFLAGS = -Wall -Wextra -std=c++14 -c
+LFLAGS = -Wall -Wextra -std=c++14
 
 DEBUG = -g
 

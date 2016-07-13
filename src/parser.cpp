@@ -55,18 +55,53 @@ namespace mtl {
 		this->running_ = true;
 	}
 
-	/*
-	*	*Metal Expression Grammar*
-	*
-	*/
+	std::set<std::string> opening_symbols = { "{", "(", "[" };
+
+	std::set<std::string> closing_symbols = { "}", ")", "]" };
+
+	std::array<std::string,  4> binary_operators = { "+",
+	                                                 "-",
+		                                         "*",
+							 "/" };
 
 	/*private*/ Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
-
+		size_t level = 0;
+		for (const auto& binop: binary_operators) {
+			for (auto p = end - 1; p != begin - 1; --p) {
+				if (p->tid == TokenIR::Type::Symbol) {
+					if (closing_symbols.count(p->token) == 1) {
+						level++;
+					} else if (opening_symbols.count(p->token) == 1) {
+						level--;
+					} else if (level == 0) {
+						if (p->token == binop) {
+							return new BinaryOpExpr(p->token,
+							                        parse_expression_impl(begin, p),
+										parse_expression_impl(p + 1, end));
+						}
+					}
+				}
+			}
+		}
+		return parse_atom_impl(begin, end);
 	}
 
 	Expression* Parser::parse_atom_impl(const expr_iter& begin, const expr_iter& end)
 	{
-
+		if (begin + 1 == end) {
+			if (begin->tid == TokenIR::Type::Identifier) {
+				return new VariableExpr(*begin);
+			}
+		} else {
+			if (begin->tid == TokenIR::Type::Identifier) {
+				//function call
+			} else {
+				if (begin->token == "(") {
+					return parse_expression_impl(begin + 1, end - 1);
+				}
+			}
+		}
+		return nullptr;
 	}
 }
