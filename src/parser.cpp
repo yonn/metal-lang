@@ -49,18 +49,31 @@ namespace mtl {
 		this->running_ = true;
 	}
 
-	std::set<std::string> opening_symbols = { "{", "(", "[" };
+	const static std::set<std::string> opening_symbols = { "{", "(", "[" };
 
-	std::set<std::string> closing_symbols = { "}", ")", "]" };
+	const static std::set<std::string> closing_symbols = { "}", ")", "]" };
 
-	std::array<bool (*)(const std::string&),  2> binary_operator_matches = {
-	                                                       [](const auto& s) {
-                                                                 return s == "+" or s == "-";
-                                                               },
-                                                               [](const auto &s) {
-                                                                 return s == "*" or s == "/";
-                                                               }
-		                                             };
+	const static std::set<std::string> unary_operators = { "+", "-",
+	                                                       "++", "--" };
+
+	const static std::array<bool (*)(const std::string&),  2> binary_operator_matches = {
+	                                                                                      [](const auto& s) {
+                                                                                                return s == "+" or s == "-";
+                                                                                              },
+                                                                                              [](const auto &s) {
+                                                                                                return s == "*" or s == "/";
+                                                                                              }
+		                                                                            };
+	
+	static bool is_binary_op(const std::string& op)
+	{
+		for (auto m: binary_operator_matches) {
+			if (m(op)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
@@ -74,9 +87,20 @@ namespace mtl {
 						level--;
 					} else if (level == 0) {
 						if (match(p->token)) {
-							return new BinaryOpExpr(p->token,
-							                        parse_expression_impl(begin, p),
-										parse_expression_impl(p + 1, end));
+							if (unary_operators.count(p->token) == 1) {
+								if (p == begin) {
+									return parse_atom_impl(begin, end);
+								} else if (is_binary_op((p - 1)->token)) {
+									continue;
+								} else {
+									goto else_;
+								}
+							} else {
+								else_:
+								return new BinaryOpExpr(p->token,
+								                        parse_expression_impl(begin, p),
+								                        parse_expression_impl(p + 1, end));
+							}
 						}
 					}
 				}
@@ -87,18 +111,21 @@ namespace mtl {
 
 	Expression* Parser::parse_atom_impl(const expr_iter& begin, const expr_iter& end)
 	{
-		if (begin + 1 == end) {
-			if (begin->tid == TokenIR::Type::Identifier) {
+		if (begin + 1 == end) { //literal
+			if (begin->tid == TokenIR::Type::Identifier) { //identifier (variable)
 				return new VariableExpr(*begin);
 			}
 		} else {
-			if (begin->tid == TokenIR::Type::Identifier) {
-				//function call
+			if (begin->tid == TokenIR::Type::Identifier and (begin + 1)->token == "(") { // func call
+			} else if (begin->tid == TokenIR::Type::Symbol) { //prefix symbol
+				return new VariableExpr(*(begin + 1));
+			} else if ((begin + 1)->tid == TokenIR::Type::Symbol) { //postfix symbol
+				return new VariableExpr(*begin);
 			} else {
-				if (begin->token == "(") {
+				if (begin->token == "(") { //parenthesis
 					return parse_expression_impl(begin + 1, end - 1);
 				}
-			}
+			} 
 		}
 		return nullptr;
 	}
