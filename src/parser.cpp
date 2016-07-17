@@ -93,10 +93,10 @@ namespace mtl {
 								} else if (is_binary_op((p - 1)->token)) {
 									continue;
 								} else {
-									goto else_;
+									goto else__;
 								}
 							} else {
-								else_:
+								else__:
 								return new BinaryOpExpr(p->token,
 								                        parse_expression_impl(begin, p),
 								                        parse_expression_impl(p + 1, end));
@@ -117,6 +117,10 @@ namespace mtl {
 		if (begin + 1 == end) { //literal
 			if (begin->tid == TokenIR::Type::Identifier) { //identifier (variable)
 				return new VariableExpr(*begin);
+			} else if (begin->tid >= TokenIR::Type::String and begin->tid <= TokenIR::Type::HexNum) {
+				return new LiteralExpr(*begin);
+			} else {
+				goto error__;
 			}
 		} else {
 			if (begin->tid == TokenIR::Type::Identifier and (begin + 1)->token == "(") { // func call
@@ -124,12 +128,14 @@ namespace mtl {
 				return new UnaryOpExpr(begin->token, parse_atom_impl(begin + 1, begin + 2));
 			} else if ((begin + 1)->tid == TokenIR::Type::Symbol and (begin + 1)->token != "(") { //postfix symbol
 				return new UnaryOpExpr((begin + 1)->token, parse_atom_impl(begin, begin + 1), true);
-			} else {
-				if (begin->token == "(") { //parenthesis
+			} else if (begin->token == "(") { //parenthesis
 					return parse_expression_impl(begin + 1, end - 1);
-				}
-			} 
+			} else {
+				goto error__;
+			}
 		}
+	error__:
+		error(begin->line_number, "Unknown tokens.");
 		return nullptr;
 	}
 }
