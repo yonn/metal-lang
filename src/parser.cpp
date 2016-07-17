@@ -105,6 +105,9 @@ namespace mtl {
 					}
 				}
 			}
+			if (level != 0) {
+				error(begin->line_number, "Unmatched parenthesis.");
+			}
 		}
 		return parse_atom_impl(begin, end);
 	}
@@ -118,9 +121,9 @@ namespace mtl {
 		} else {
 			if (begin->tid == TokenIR::Type::Identifier and (begin + 1)->token == "(") { // func call
 			} else if (begin->tid == TokenIR::Type::Symbol and begin->token != "(") { //prefix symbol
-				return new VariableExpr(*(begin + 1));
+				return new UnaryOpExpr(begin->token, parse_atom_impl(begin + 1, begin + 2));
 			} else if ((begin + 1)->tid == TokenIR::Type::Symbol and (begin + 1)->token != "(") { //postfix symbol
-				return new VariableExpr(*begin);
+				return new UnaryOpExpr((begin + 1)->token, parse_atom_impl(begin, begin + 1), true);
 			} else {
 				if (begin->token == "(") { //parenthesis
 					return parse_expression_impl(begin + 1, end - 1);

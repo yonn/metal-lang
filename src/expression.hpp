@@ -35,6 +35,21 @@ namespace mtl {
 	
 	};
 
+	class UnaryOpExpr : public Expression {
+	public:
+
+		UnaryOpExpr(const std::string& op, Expression* e, bool post = false);
+
+		virtual std::string cpp_codegen() const;
+
+	protected:
+
+		bool post_;
+		std::string op_;
+		Expression* e_;
+
+	};
+
 	class VariableExpr : public Expression {
 	public:
 		
@@ -45,6 +60,19 @@ namespace mtl {
 	protected:
 		
 		std::string varname_;
+	};
+
+	class LiteralExpr : public Expression {
+	public:
+	
+		LiteralExpr(const TokenIR& token);
+
+		virtual std::string cpp_codegen() const;
+
+	protected:
+
+		std::string literal_;
+		TokenIR::Type type_;
 	};
 
 }
