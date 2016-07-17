@@ -77,8 +77,8 @@ namespace mtl {
 
 	Expression* Parser::parse_expression_impl(const expr_iter& begin, const expr_iter& end)
 	{
-		size_t level = 0;
 		for (auto match: binary_operator_matches) {
+			size_t level = 0;
 			for (auto p = end - 1; p != begin - 1; --p) {
 				if (p->tid == TokenIR::Type::Symbol) {
 					if (closing_symbols.count(p->token) == 1) {
@@ -117,9 +117,9 @@ namespace mtl {
 			}
 		} else {
 			if (begin->tid == TokenIR::Type::Identifier and (begin + 1)->token == "(") { // func call
-			} else if (begin->tid == TokenIR::Type::Symbol) { //prefix symbol
+			} else if (begin->tid == TokenIR::Type::Symbol and begin->token != "(") { //prefix symbol
 				return new VariableExpr(*(begin + 1));
-			} else if ((begin + 1)->tid == TokenIR::Type::Symbol) { //postfix symbol
+			} else if ((begin + 1)->tid == TokenIR::Type::Symbol and (begin + 1)->token != "(") { //postfix symbol
 				return new VariableExpr(*begin);
 			} else {
 				if (begin->token == "(") { //parenthesis
