@@ -14,6 +14,8 @@ namespace mtl {
 		
 		Expression(size_t line_number);
 
+		virtual std::string type() const = 0;
+
 		virtual std::string cpp_codegen() const = 0;
 
 		size_t line_number;
@@ -23,6 +25,8 @@ namespace mtl {
 	public:
 
 		BinaryOpExpr(const std::string& op, Expression* l, Expression* r);
+		
+		virtual std::string type() const;
 		
 		virtual std::string cpp_codegen() const;
 
@@ -40,6 +44,8 @@ namespace mtl {
 
 		UnaryOpExpr(const std::string& op, Expression* e, bool post = false);
 
+		virtual std::string type() const;
+
 		virtual std::string cpp_codegen() const;
 
 	protected:
@@ -55,6 +61,8 @@ namespace mtl {
 		
 		VariableExpr(const TokenIR& token);
 
+		virtual std::string type() const;
+
 		virtual std::string cpp_codegen() const;
 
 	protected:
@@ -66,6 +74,8 @@ namespace mtl {
 	public:
 	
 		LiteralExpr(const TokenIR& token);
+		
+		virtual std::string type() const;
 
 		virtual std::string cpp_codegen() const;
 
