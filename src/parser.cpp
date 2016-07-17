@@ -135,7 +135,7 @@ namespace mtl {
 			}
 		}
 	error__:
-		error(begin->line_number, "Unknown tokens.");
+		error(begin->line_number, "Unknown tokens in expression.");
 		return nullptr;
 	}
 }
