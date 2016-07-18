@@ -14,11 +14,6 @@ namespace mtl {
 		this->rhs_ = r;
 	}
 
-	std::string BinaryOpExpr::type() const
-	{
-		return "Unimplemented";
-	}
-
 	std::string BinaryOpExpr::cpp_codegen() const
 	{
 		std::ostringstream o;
@@ -34,11 +29,6 @@ namespace mtl {
 		this->post_ = post;
 	}
 
-	std::string UnaryOpExpr::type() const
-	{
-		return "Unimplemented";
-	}
-	
 	std::string UnaryOpExpr::cpp_codegen() const
 	{
 		if (this->post_) {

@@ -26,8 +26,6 @@ namespace mtl {
 
 		BinaryOpExpr(const std::string& op, Expression* l, Expression* r);
 		
-		virtual std::string type() const;
-		
 		virtual std::string cpp_codegen() const;
 
 	protected:
@@ -43,8 +41,6 @@ namespace mtl {
 	public:
 
 		UnaryOpExpr(const std::string& op, Expression* e, bool post = false);
-
-		virtual std::string type() const;
 
 		virtual std::string cpp_codegen() const;
 

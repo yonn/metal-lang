@@ -1,4 +1,5 @@
-bin
+bin/*.o
+bin/metalc
 
 GPATH
 GRTAGS
