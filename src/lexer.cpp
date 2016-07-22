@@ -136,7 +136,7 @@ namespace mtl {
 		} else if (is_identifier_token(token)){
 			res.tid = TokenIR::Type::Identifier;
 		} else {
-			error(line_num, "Unidentified token \"%s\"", token.c_str());
+			error(line_num, "Unidentified token `%s'.", token.c_str());
 		}
 
 		return res;

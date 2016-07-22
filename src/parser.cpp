@@ -97,7 +97,7 @@ namespace mtl {
 								}
 							} else {
 								else__:
-								return new BinaryOpExpr(p->token,
+								return make_binary_expr(p->token,
 								                        parse_expression_impl(begin, p),
 								                        parse_expression_impl(p + 1, end));
 							}
@@ -125,9 +125,9 @@ namespace mtl {
 		} else {
 			if (begin->tid == TokenIR::Type::Identifier and (begin + 1)->token == "(") { // func call
 			} else if (begin->tid == TokenIR::Type::Symbol and begin->token != "(") { //prefix symbol
-				return new UnaryOpExpr(begin->token, parse_atom_impl(begin + 1, begin + 2));
+				return make_unary_expr(begin->token, parse_atom_impl(begin + 1, begin + 2));
 			} else if ((begin + 1)->tid == TokenIR::Type::Symbol and (begin + 1)->token != "(") { //postfix symbol
-				return new UnaryOpExpr((begin + 1)->token, parse_atom_impl(begin, begin + 1), true);
+				return make_unary_expr((begin + 1)->token, parse_atom_impl(begin, begin + 1), true);
 			} else if (begin->token == "(") { //parenthesis
 					return parse_expression_impl(begin + 1, end - 1);
 			} else {

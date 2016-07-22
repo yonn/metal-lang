@@ -2,84 +2,19 @@
 
 namespace mtl {
 
-	Expression::Expression(size_t line_number)
+	BinaryOpExpr* make_binary_expr(const std::string& op, Expression* lhs, Expression* rhs)
 	{
-		this->line_number = line_number;
-	}
-
-	BinaryOpExpr::BinaryOpExpr(const std::string& op, Expression* l, Expression* r) : Expression(l->line_number)
-	{
-		this->op_ = op;
-		this->lhs_ = l;
-		this->rhs_ = r;
-	}
-
-	std::string BinaryOpExpr::cpp_codegen() const
-	{
-		std::ostringstream o;
-		o << '(' << this->lhs_->cpp_codegen() << ' ' << this->op_ << ' ' << this->rhs_->cpp_codegen() << ')';
-		return o.str();
-	}
-
-
-	UnaryOpExpr::UnaryOpExpr(const std::string& op, Expression* e, bool post) : Expression(e->line_number)
-	{
-		this->op_ = op;
-		this->e_ = e;
-		this->post_ = post;
-	}
-
-	std::string UnaryOpExpr::cpp_codegen() const
-	{
-		if (this->post_) {
-			return this->e_->cpp_codegen() + this->op_;
-		} else {
-			return this->op_ + this->e_->cpp_codegen();
+		if (op == "+") {
+			return new AddExpr(lhs, rhs);
 		}
+		error(lhs->line_number, "Unsupported binary operator `%s'.", op.c_str());
+		return nullptr;
 	}
 
-	VariableExpr::VariableExpr(const TokenIR& token) : Expression(token.line_number)
+	UnaryOpExpr* make_unary_expr(const std::string& op, Expression* e, bool post)
 	{
-		this->varname_ = token.token;
+		error(e->line_number, "Unsupported unary operator `%s'.", op.c_str());
+		return nullptr;
 	}
 
-	std::string VariableExpr::type() const
-	{
-		return "Unimplemented";
-	}
-
-	std::string VariableExpr::cpp_codegen() const
-	{
-		return this->varname_;
-	}
-
-	LiteralExpr::LiteralExpr(const TokenIR& token) : Expression(token.line_number)
-	{
-		this->type_ = token.tid;
-		this->literal_ = token.token;
-	}
-
-	std::string LiteralExpr::type() const
-	{
-		switch (this->type_) {
-		case TokenIR::Type::String:
-			return "std::string";
-		case TokenIR::Type::Character:
-			return "char";
-		case TokenIR::Type::DecimalNum:
-		case TokenIR::Type::HexNum:
-			return "long";
-		case TokenIR::Type::FloatNum:
-			return "double";
-		default:
-			error(this->line_number, "Could not identify literal type.");
-			return "";
-		}
-	}
-
-	std::string LiteralExpr::cpp_codegen() const
-	{
-		return this->literal_;
-	}
-	
 }
