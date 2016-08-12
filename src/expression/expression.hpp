@@ -6,6 +6,7 @@
 
 #include "../lexer.hpp"
 #include "../error.hpp"
+#include "../type.hpp"
 
 namespace mtl {
 
@@ -14,7 +15,7 @@ namespace mtl {
 		
 		Expression(size_t line_number);
 
-		virtual std::string type() const = 0;
+		virtual Type type() const = 0;
 
 		virtual std::string cpp_codegen() const = 0;
 
@@ -57,7 +58,7 @@ namespace mtl {
 		
 		VariableExpr(const TokenIR& token);
 
-		virtual std::string type() const;
+		virtual Type type() const;
 
 		virtual std::string cpp_codegen() const;
 
@@ -71,7 +72,7 @@ namespace mtl {
 	
 		LiteralExpr(const TokenIR& token);
 		
-		virtual std::string type() const;
+		virtual Type type() const;
 
 		virtual std::string cpp_codegen() const;
 

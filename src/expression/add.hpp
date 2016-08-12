@@ -9,9 +9,9 @@ namespace mtl {
 	public:
 		AddExpr(Expression* lhs, Expression* rhs) : BinaryOpExpr("+", lhs, rhs) { }
 
-		virtual std::string type() const
+		virtual Type type() const
        		{
-				return "Undefined.";
+			return choose_number_type(this->line_number, "+", this->lhs_->type(), this->rhs_->type());
 	       	}
 	};
 

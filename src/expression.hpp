@@ -10,6 +10,9 @@
 #include "expression/expression.hpp"
 
 #include "expression/add.hpp"
+#include "expression/sub.hpp"
+#include "expression/div.hpp"
+#include "expression/mul.hpp"
 
 namespace mtl {
 

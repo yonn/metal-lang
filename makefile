@@ -5,7 +5,7 @@ LFLAGS = -Wall -Wextra -std=c++14
 
 DEBUG = -g
 
-OBJS = bin/metal.o bin/parser.o bin/expression.o bin/expression_expression.o bin/lexer.o bin/error.o
+OBJS = bin/metal.o bin/parser.o bin/expression.o bin/expression_expression.o bin/type.o bin/lexer.o bin/error.o
 
 metalc: src/main.cpp $(OBJS)
 	$(CC) $(LFLAGS) $(DEBUG) src/main.cpp $(OBJS) -o bin/metalc
@@ -19,8 +19,11 @@ bin/parser.o: src/parser.cpp src/parser.hpp src/lexer.hpp src/expression.hpp src
 bin/expression.o: src/expression.cpp src/expression.hpp src/expression/expression.hpp src/lexer.hpp src/error.hpp
 	$(CC) $(CFLAGS) $(DEBUG) src/expression.cpp -o bin/expression.o
 
-bin/expression_expression.o: src/expression/expression.cpp src/expression/expression.hpp src/lexer.hpp src/error.hpp
+bin/expression_expression.o: src/expression/expression.cpp src/expression/expression.hpp src/type.hpp src/lexer.hpp src/error.hpp
 	$(CC) $(CFLAGS) $(DEBUG) src/expression/expression.cpp -o bin/expression_expression.o
+
+bin/type.o: src/type.cpp src/type.hpp src/error.hpp
+	$(CC) $(CFLAGS) $(DEBUG) src/type.cpp -o bin/type.o
 
 bin/lexer.o: src/lexer.cpp src/lexer.hpp src/error.hpp
 	$(CC) $(CFLAGS) $(DEBUG) src/lexer.cpp -o bin/lexer.o

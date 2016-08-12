@@ -43,9 +43,9 @@ namespace mtl {
 		this->varname_ = token.token;
 	}
 
-	std::string VariableExpr::type() const
+	Type VariableExpr::type() const
 	{
-		return "Unimplemented";
+		return Type("Unimplemented");
 	}
 
 	std::string VariableExpr::cpp_codegen() const
@@ -59,21 +59,21 @@ namespace mtl {
 		this->literal_ = token.token;
 	}
 
-	std::string LiteralExpr::type() const
+	Type LiteralExpr::type() const
 	{
 		switch (this->type_) {
 		case TokenIR::Type::String:
-			return "std::string";
+			return Type("string");
 		case TokenIR::Type::Character:
-			return "char";
+			return Type("char");
 		case TokenIR::Type::DecimalNum:
 		case TokenIR::Type::HexNum:
-			return "long";
+			return Type("long");
 		case TokenIR::Type::FloatNum:
-			return "double";
+			return Type("double");
 		default:
 			error(this->line_number, "Could not identify literal type.");
-			return "";
+			return Type("");
 		}
 	}
 
