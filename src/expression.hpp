@@ -13,6 +13,7 @@
 #include "expression/sub.hpp"
 #include "expression/div.hpp"
 #include "expression/mul.hpp"
+#include "expression/pow.hpp"
 
 namespace mtl {
 

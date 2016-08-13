@@ -56,13 +56,16 @@ namespace mtl {
 	const static std::set<std::string> unary_operators = { "+", "-",
 	                                                       "++", "--" };
 
-	const static std::array<bool (*)(const std::string&),  2> binary_operator_matches = {
+	const static std::array<bool (*)(const std::string&),  3> binary_operator_matches = {
 	                                                                                      [](const auto& s) {
                                                                                                 return s == "+" or s == "-";
                                                                                               },
                                                                                               [](const auto &s) {
                                                                                                 return s == "*" or s == "/";
-                                                                                              }
+                                                                                              },
+		                                                                              [](const auto& s) {
+											        return s == "^^";
+											      }
 		                                                                            };
 	
 	static bool is_binary_op(const std::string& op)

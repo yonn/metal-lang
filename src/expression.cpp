@@ -12,6 +12,8 @@ namespace mtl {
 			return new MulExpr(lhs, rhs);
 		} else if (op == "/") {
 			return new DivExpr(lhs, rhs);
+		} else if (op == "^^") {
+			return new PowExpr(lhs, rhs);
 		} else {
 			error(lhs->line_number, "Unsupported binary operator `%s'.", op.c_str());
 			return nullptr;
