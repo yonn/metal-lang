@@ -36,6 +36,13 @@ namespace mtl {
 		virtual std::string cpp_codegen() const;
 		
 	};
+
+	class Char: public Type {
+		
+		virtual std::string type() const;
+		virtual std::string cpp_codegen() const;
+
+	};
 	
 }
 

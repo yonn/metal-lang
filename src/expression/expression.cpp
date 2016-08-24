@@ -63,9 +63,9 @@ namespace mtl {
 	{
 		switch (this->type_) {
 		case TokenIR::Type::String:
-			return nullptr;
+			return new String;
 		case TokenIR::Type::Character:
-			return nullptr;
+			return new Char;
 		case TokenIR::Type::DecimalNum:
 		case TokenIR::Type::HexNum:
 			return new Int(0, true);

@@ -38,5 +38,15 @@ namespace mtl {
 	{
 		return "std::string";
 	}
+
+	std::string Char::type() const
+	{
+		return "char";
+	}
+
+	std::string Char::cpp_codegen() const
+	{
+		return "char";
+	}
 	
 }
