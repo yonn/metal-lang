@@ -28,6 +28,14 @@ namespace mtl {
 		bool sign;
 		
 	};
+
+	
+	class String: public Type {
+		
+		virtual std::string type() const;
+		virtual std::string cpp_codegen() const;
+		
+	};
 	
 }
 

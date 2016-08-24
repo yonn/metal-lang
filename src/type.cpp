@@ -10,9 +10,10 @@ namespace mtl {
 
 	std::string Int::type() const
 	{
+		size_t size = this->size;
 		switch (this->size) {
 		case 0:
-			return "int";
+			size = sizeof(int);
 		default:
 			return ((this->sign)? "i" : "u") + std::to_string(size);
 		}
@@ -26,6 +27,16 @@ namespace mtl {
 		default:
 			return ((this->sign)? "int" : "uint") + std::to_string(size) + "_t";
 		}
+	}
+
+	std::string String::type() const
+	{
+		return "string";
+	}
+
+	std::string String::cpp_codegen() const
+	{
+		return "std::string";
 	}
 	
 }
