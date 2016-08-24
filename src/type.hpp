@@ -10,21 +10,24 @@ namespace mtl {
 
 	class Type {
 	public:
-		
-		Type(const std::string& s);
 
-		std::string str() const;
-			
-		std::string type_;
+		virtual std::string type() const = 0;
+		virtual std::string cpp_codegen() const = 0;
 		
 	};
 
-	bool operator==(const Type& l, const Type& r);
-	bool operator<(const Type& l, const Type& r);
-	
-	extern std::map<Type, int> numbers;
+	class Int: public Type {
+	public:
 
-	Type choose_number_type(size_t line_number, std::string op, const Type& l, const Type& r);
+		Int(size_t size, bool sign);
+		
+		virtual std::string type() const;
+		virtual std::string cpp_codegen() const;
+
+		size_t size;
+		bool sign;
+		
+	};
 	
 }
 

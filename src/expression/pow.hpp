@@ -16,10 +16,9 @@ namespace mtl {
 			return s.str();
 		}
 		
-		virtual Type type() const
+		virtual Type* type() const
        		{
-			choose_number_type(this->line_number, "^^", this->lhs_->type(), this->rhs_->type());
-			return this->lhs_->type();
+			return nullptr;
 	       	}
 		
 	};
